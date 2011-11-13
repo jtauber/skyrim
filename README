@@ -1,0 +1,34 @@
+Code for exploring Skyrim data files
+
+If you're playing via Steam, the files will be in:
+
+    Steam/steamapps/common/skyrim/Data/
+
+./bsa.py will extract filenames with offsets and lengths from BSA files:
+
+    Skyrim - Animations.bsa
+        (hkx and txt files)
+    
+    Skyrim - Interface.bsa
+        (dds, dlstrings, gfx, ilstrings, strings, swf and txt files)
+    
+    Skyrim - Meshes.bsa
+        (mostly nif but also bto, btr, btt, tri and txt files)
+    
+    Skyrim - Misc.bsa
+        (gid and pex files)
+    
+    Skyrim - Shaders.bsa
+        (fxp files)
+    
+    Skyrim - Sounds.bsa
+        (wav and xwm files)
+    
+    Skyrim - Textures.bsa
+        (mostly dds but some png files)
+    
+    Skyrim - Voices.bsa
+        (fuz files)
+    
+    Skyrim - VoicesExtra.bsa
+        (fuz files)

@@ -32,3 +32,5 @@ If you're playing via Steam, the files will be in:
     
     Skyrim - VoicesExtra.bsa
         (fuz files)
+
+./tes.py (still work in progress) will show records and fields in .esm files.

@@ -4,6 +4,7 @@
 # @@@ FORMAT WORKS.
 
 
+from cStringIO import StringIO
 import struct
 import sys
 
@@ -20,10 +21,9 @@ while True:
     if not data:
         break
     block_type = struct.unpack("<4s", data)[0]
-    print block_type,
+    print block_type
     if block_type in ["GRUP"]:
         length = struct.unpack("<L", f.read(4))[0]
-        print length
         f.read(16)
     elif block_type in ["TES4", "GMST", "KYWD", "LCRT", "AACT", "TXST",
             "GLOB", "CLAS", "FACT", "HDPT", "EYES", "RACE", "SOUN", "ASPC",
@@ -42,8 +42,17 @@ while True:
             "MATO", "MOVT", "SNDR", "DUAL", "SNCT", "SOPM", "COLL", "CLFM",
             "REVB", "NAVI"]:
         length = struct.unpack("<L", f.read(4))[0]
-        print length
-        f.read(length + 16)
+        f.read(16)
+        record_data = StringIO(f.read(length))
+        while True:
+            data = record_data.read(4)
+            if not data:
+                break
+            field_type = struct.unpack("<4s", data)[0]
+            print "\t", field_type,
+            length = struct.unpack("<H", record_data.read(2))[0]
+            field_data = record_data.read(length)
+            print field_data
     else:
         print "unknown"
         sys.exit(1)

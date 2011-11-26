@@ -5,8 +5,13 @@ import sys
 
 if len(sys.argv) == 2:
     BSA_FILE = sys.argv[1]
+    EXTRACT_FILE = None
+elif len(sys.argv) == 4:
+    BSA_FILE = sys.argv[1]
+    EXTRACT_FILE = sys.argv[2]
+    OUTPUT_FILE = sys.argv[3]
 else:
-    print "usage: %s <bsa-file>" % sys.argv[0]
+    print "usage: %s <bsa-file> [<file-to-extract> <output-filename>]" % sys.argv[0]
     sys.exit(1)
 
 HEADER_LENGTH = 0x24
@@ -38,13 +43,27 @@ assert file_count == len(files)
 
 file_num = 0 
 current_filename = ""
+found = False
 while file_num < file_count:
     ch = f.read(1)
     if ch == "\x00":
         file_hash, file_size, file_offset, folder_path = files[file_num]
-        print "%s\\%s hash=%08X offset=%d length=%d" % \
-            (folder_path, current_filename, file_hash, file_offset, file_size)
+        if EXTRACT_FILE:
+            if folder_path + "\\" + current_filename == EXTRACT_FILE:
+                f.seek(file_offset)
+                data = f.read(file_size)
+                out = open(OUTPUT_FILE, "w")
+                out.write(data)
+                out.close()
+                found = True
+                break
+        else:
+            print "%s\\%s hash=%08X offset=%d length=%d" % \
+                (folder_path, current_filename, file_hash, file_offset, file_size)
         current_filename = ""
         file_num += 1
     else:
         current_filename += ch
+
+if EXTRACT_FILE and not found:
+    print "File not found."

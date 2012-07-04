@@ -51,9 +51,18 @@ while file_num < file_count:
         if EXTRACT_FILE:
             if folder_path + "\\" + current_filename == EXTRACT_FILE:
                 f.seek(file_offset)
-                data = f.read(file_size)
+                file_path_length = ord(f.read(1))
+                file_path = f.read(file_path_length)
+                assert file_path == EXTRACT_FILE
+                file_length = struct.unpack("<L", f.read(4))[0]
+                unknown = f.read(2)
+                block_tag = 0
                 out = open(OUTPUT_FILE, "w")
-                out.write(data)
+                while block_tag == 0:
+                    block_tag, block_length, block_notlength = struct.unpack("<BHH", f.read(5))
+                    assert block_length + block_notlength == 0xFFFF
+                    data = f.read(block_length)
+                    out.write(data)
                 out.close()
                 found = True
                 break
